@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lucille's Japan List</title>
+<title>Lucille & Sun's Tokyo List</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet">
@@ -366,9 +366,9 @@ body {
 <!-- Hero -->
 <section class="hero">
   <div class="hero-content">
-    <p class="hero-kanji">日本 · JAPAN</p>
-    <h1 class="hero-title">Lucille's<br><em>Japan</em> List</h1>
-    <p class="hero-subtitle">A personal collection of places I love across Japan — shops, cafés, restaurants, museums, and hidden gems curated over years of exploring.</p>
+    <p class="hero-kanji">東京 · TOKYO</p>
+    <h1 class="hero-title">Lucille & Sun's<br><em>Tokyo</em> List</h1>
+    <p class="hero-subtitle">A personal collection of places we love in Tokyo — shops, cafés, restaurants, museums, and hidden gems curated over years of exploring.</p>
     <div class="hero-stats">
       <div>
         <div class="hero-stat-number" id="stat-places">0</div>
@@ -392,7 +392,7 @@ body {
 <!-- Toolbar -->
 <nav class="toolbar" id="toolbar">
   <div class="toolbar-inner">
-    <div class="toolbar-logo">Lucille's <em>Japan</em></div>
+    <div class="toolbar-logo">Lucille & Sun's <em>Tokyo</em></div>
     <div class="search-box">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
       <input type="text" placeholder="Search places..." id="search-input">
@@ -402,163 +402,138 @@ body {
   </div>
 </nav>
 
-<!-- Tokyo List -->
+<!-- Places -->
 <section class="places-section" id="section-tokyo">
-  <h2 class="list-title">Tokyo</h2>
-  <p class="list-subtitle">81 places · jingi sun's shared list</p>
+  <h2 class="list-title">東京</h2>
+  <p class="list-subtitle" id="places-subtitle"></p>
   <div class="places-grid" id="grid-tokyo"></div>
-</section>
-
-<div class="section-divider"><hr></div>
-
-<!-- Kanto List -->
-<section class="places-section" id="section-kanto">
-  <h2 class="list-title">日本関東地区</h2>
-  <p class="list-subtitle">30 places · Lucille Liu's collection</p>
-  <div class="places-grid" id="grid-kanto"></div>
 </section>
 
 <!-- Footer -->
 <footer class="footer">
-  <p>Curated by Lucille · Built with care · <a href="https://maps.app.goo.gl/vE2bLxB5yPWj47bK7">Tokyo Map</a> · <a href="https://maps.app.goo.gl/W81WK6EmNVh8erZF7">Kanto Map</a></p>
+  <p>Curated by Lucille & Sun · <a href="https://maps.app.goo.gl/vE2bLxB5yPWj47bK7">Tokyo Map</a> · <a href="https://maps.app.goo.gl/W81WK6EmNVh8erZF7">Kanto Map</a></p>
 </footer>
 
 <script>
-// ── Place Data ──
-const PLACES = {
-  tokyo: [
-    {name:"Ramen Takahashi",cat:"Ramen",area:"Tokyo"},
-    {name:"Birkenstock",cat:"Shopping",area:"Tokyo"},
-    {name:"Blue Bottle Coffee Ginza Cafe",cat:"Coffee",area:"Ginza"},
-    {name:"Glitch Coffee and Roasters GINZA",cat:"Coffee",area:"Ginza"},
-    {name:"BONGENCOFFEE Ginza",cat:"Coffee",area:"Ginza"},
-    {name:"Hard Off",cat:"Shopping",area:"Tokyo"},
-    {name:"Fujisan Shokupan",cat:"Bakery",area:"Tokyo"},
-    {name:"Longtemps",cat:"Bakery",area:"Tokyo"},
-    {name:"APPLE PIE lab",cat:"Bakery",area:"Tokyo"},
-    {name:"mont-bell Tokyo Kyobashi",cat:"Shopping",area:"Kyobashi"},
-    {name:"NAKAO SHOP & OFFICE",cat:"Craft & Design",area:"Tokyo"},
-    {name:"NAKAO FACTORY WORKS & Sohbi",cat:"Craft & Design",area:"Tokyo"},
-    {name:"TSUCHI-YA ガラスの器と工芸",cat:"Craft & Design",area:"Tokyo"},
-    {name:"器 まえさか",cat:"Craft & Design",area:"Tokyo"},
-    {name:"Kama-Asa",cat:"Craft & Design",area:"Kappabashi"},
-    {name:"Takaso",cat:"Craft & Design",area:"Kappabashi"},
-    {name:"Dr.Goods",cat:"Craft & Design",area:"Tokyo"},
-    {name:"ATELIER(アトリエ) 丸の内",cat:"Fashion",area:"Marunouchi"},
-    {name:"Shihara Dover Street Market Ginza",cat:"Fashion",area:"Ginza"},
-    {name:"minä perhonen materiaali",cat:"Fashion",area:"Tokyo"},
-    {name:"Tsutaya Books Daikanyama",cat:"Books",area:"Daikanyama"},
-    {name:"Isetan Shinjuku",cat:"Department Store",area:"Shinjuku"},
-    {name:"URBANIC30 AOYAMA",cat:"Fashion",area:"Aoyama"},
-    {name:"CA4LA Daikanyama Shop",cat:"Fashion",area:"Daikanyama"},
-    {name:"Margaret Howell",cat:"Fashion",area:"Tokyo"},
-    {name:"STUDIO NICHOLSON SHIBUYA PARCO",cat:"Fashion",area:"Shibuya"},
-    {name:"BEAMS JAPAN SHIBUYA",cat:"Fashion",area:"Shibuya"},
-    {name:"Beams Japan",cat:"Fashion",area:"Shinjuku"},
-    {name:"FIT TWO",cat:"Fashion",area:"Tokyo"},
-    {name:"cotogoto",cat:"Craft & Design",area:"Tokyo"},
-    {name:"The Okura Tokyo",cat:"Hotel",area:"Toranomon"},
-    {name:"JOURNAL STANDARD LUXE",cat:"Fashion",area:"Tokyo"},
-    {name:"JOURNAL STANDARD 表参道 ladies店",cat:"Fashion",area:"Omotesando"},
-    {name:"The Conran Shop",cat:"Interior",area:"Tokyo"},
-    {name:"MIDTOWN CHRISTMAS イルミネーション",cat:"Experience",area:"Roppongi"},
-    {name:"国立西洋美术馆",cat:"Museum",area:"Ueno"},
-    {name:"proto 器とタカラモノ",cat:"Craft & Design",area:"Tokyo"},
-    {name:"deps.",cat:"Craft & Design",area:"Tokyo"},
-    {name:"東京都庭園美術館",cat:"Museum",area:"Meguro"},
-    {name:"Ｆ・Ｍ・Ｎ",cat:"Craft & Design",area:"Tokyo"},
-    {name:"COMME des GARÇONS Aoyama Store",cat:"Fashion",area:"Aoyama"},
-    {name:"ARTS&SCIENCE Aoyama women flagship",cat:"Fashion",area:"Aoyama"},
-    {name:"Arts & Science Marunouchi",cat:"Fashion",area:"Marunouchi"},
-    {name:"LOVELESS AOYAMA",cat:"Fashion",area:"Aoyama"},
-    {name:"LE LABO Aoyama Store",cat:"Beauty",area:"Aoyama"},
-    {name:"エイチ ビューティー＆ユース",cat:"Fashion",area:"Tokyo"},
-    {name:"江户东京建筑园",cat:"Museum",area:"Koganei"},
-    {name:"YAECA APARTMENT STORE",cat:"Fashion",area:"Tokyo"},
-    {name:"YAECA Ebisu",cat:"Fashion",area:"Ebisu"},
-    {name:"Sippo",cat:"Café",area:"Tokyo"},
-    {name:"日本杂货 &清酒吧 DEARYOU 表参道店",cat:"Bar",area:"Omotesando"},
-    {name:"JAPAN PEARLS",cat:"Shopping",area:"Tokyo"},
-    {name:"Coverchord Nakameguro",cat:"Fashion",area:"Nakameguro"},
-    {name:"MHL Daikanyama",cat:"Fashion",area:"Daikanyama"},
-    {name:"Nanamica Daikanyama",cat:"Fashion",area:"Daikanyama"},
-    {name:"Forest Gate Daikanyama",cat:"Shopping",area:"Daikanyama"},
-    {name:"KITTE Marunouchi",cat:"Shopping",area:"Marunouchi"},
-    {name:"L'Appartement Aoyama",cat:"Fashion",area:"Aoyama"},
-    {name:"L'Appartement 東京店",cat:"Fashion",area:"Tokyo"},
-    {name:"AURALEE",cat:"Fashion",area:"Tokyo"},
-    {name:"BLAMINK TOKYO",cat:"Fashion",area:"Tokyo"},
-    {name:"LAND OF TOMORROW 丸之内店",cat:"Shopping",area:"Marunouchi"},
-    {name:"フリーデザイン Free Design",cat:"Interior",area:"Tokyo"},
-    {name:"SOU·SOU KYOTO Aoyama Store",cat:"Fashion",area:"Aoyama"},
-    {name:"The Harvest Kitchen General Store",cat:"Shopping",area:"Tokyo"},
-    {name:"Popeye Camera Flagship Store",cat:"Shopping",area:"Tokyo"},
-    {name:"うつわと雑貨 トラシー",cat:"Craft & Design",area:"Tokyo"},
-    {name:"Cinq",cat:"Craft & Design",area:"Tokyo"},
-    {name:"Pacific Furniture Service",cat:"Interior",area:"Tokyo"},
-    {name:"MoMA Design Store表参道",cat:"Interior",area:"Omotesando"},
-    {name:"Encounter Madu Aoyama",cat:"Interior",area:"Aoyama"},
-    {name:"Artek Tokyo Store",cat:"Interior",area:"Tokyo"},
-    {name:"Mid-Century MODERN",cat:"Interior",area:"Tokyo"},
-    {name:"合羽桥道具街",cat:"Craft & Design",area:"Kappabashi"},
-    {name:"Tool Shop Nobori",cat:"Craft & Design",area:"Kappabashi"},
-    {name:"LOST AND FOUND TOKYO STORE",cat:"Interior",area:"Tokyo"},
-    {name:"club d by D&DESIGN",cat:"Interior",area:"Tokyo"},
-    {name:"OZEKI Tokyo Gallery",cat:"Craft & Design",area:"Tokyo"},
-    {name:"D&DEPARTMENT TOKYO",cat:"Interior",area:"Tokyo"},
-    {name:"LEMAIRE恵比寿",cat:"Fashion",area:"Ebisu"},
-    {name:"Kyuko",cat:"Craft & Design",area:"Tokyo"}
-  ],
-  kanto: [
-    {name:"Ekkamai BTS Station",cat:"Transit",area:"Tokyo"},
-    {name:"Ginza Kagari - Soba",cat:"Ramen",area:"Ginza"},
-    {name:"TRAVELER'S FACTORY STATION",cat:"Stationery",area:"Tokyo"},
-    {name:"Kizuna",cat:"Restaurant",area:"Tokyo"},
-    {name:"船津滨温泉街",cat:"Onsen",area:"Fuji"},
-    {name:"DOLCE TACUBO CAFFE",cat:"Café",area:"Tokyo"},
-    {name:"DOLCE TACUBO",cat:"Restaurant",area:"Tokyo"},
-    {name:"Miko Sushi Ginza",cat:"Sushi",area:"Ginza"},
-    {name:"PÂTISSERIE ASAKO IWAYANAGI",cat:"Bakery",area:"Tokyo"},
-    {name:"BIEN-ETRE MAISON",cat:"Café",area:"Tokyo"},
-    {name:"Shinjuku Kitamura Camera",cat:"Shopping",area:"Shinjuku"},
-    {name:"Tokyo Midtown Design Hub",cat:"Museum",area:"Roppongi"},
-    {name:"东京中城",cat:"Shopping",area:"Roppongi"},
-    {name:"21_21 设计视野",cat:"Museum",area:"Roppongi"},
-    {name:"草月会館",cat:"Culture",area:"Tokyo"},
-    {name:"Museum of Contemporary Art Tokyo (MOT)",cat:"Museum",area:"Kiyosumi"},
-    {name:"Rāmenya Shima",cat:"Ramen",area:"Tokyo"},
-    {name:"Tsukiji Itadori Uogashi Senryo",cat:"Sushi",area:"Tsukiji"},
-    {name:"Imahan Annex",cat:"Restaurant",area:"Tokyo"},
-    {name:"MERCER BRUNCH ROPPONGI",cat:"Restaurant",area:"Roppongi"},
-    {name:"OMO5 Tokyo Gotanda by Hoshino Resorts",cat:"Hotel",area:"Gotanda"},
-    {name:"Daikanyama Issai Kassai",cat:"Craft & Design",area:"Daikanyama"},
-    {name:"三井奥特莱斯购物城 木更津",cat:"Shopping",area:"Kisarazu"},
-    {name:"Roppongi Inakaya",cat:"Restaurant",area:"Roppongi"},
-    {name:"ART AQUARIUM MUSEUM",cat:"Museum",area:"Ginza"},
-    {name:"GINZA SIX",cat:"Shopping",area:"Ginza"},
-    {name:"宫下公园",cat:"Park",area:"Shibuya"},
-    {name:"The Okura Tokyo",cat:"Hotel",area:"Toranomon"},
-    {name:"Hoshinoya Karuizawa",cat:"Hotel",area:"Karuizawa"},
-    {name:"富士山",cat:"Nature",area:"Fuji"}
-  ]
-};
+// ── Place Data (Tokyo only) ──
+const PLACES = [
+  {name:"Ramen Takahashi",cat:"Ramen",area:"Tokyo"},
+  {name:"Birkenstock",cat:"Shopping",area:"Tokyo"},
+  {name:"Blue Bottle Coffee Ginza Cafe",cat:"Coffee",area:"Ginza"},
+  {name:"Glitch Coffee and Roasters GINZA",cat:"Coffee",area:"Ginza"},
+  {name:"BONGENCOFFEE Ginza",cat:"Coffee",area:"Ginza"},
+  {name:"Hard Off",cat:"Shopping",area:"Tokyo"},
+  {name:"Fujisan Shokupan",cat:"Bakery",area:"Tokyo"},
+  {name:"Longtemps",cat:"Bakery",area:"Tokyo"},
+  {name:"APPLE PIE lab",cat:"Bakery",area:"Tokyo"},
+  {name:"mont-bell Tokyo Kyobashi",cat:"Shopping",area:"Kyobashi"},
+  {name:"NAKAO SHOP & OFFICE",cat:"Craft & Design",area:"Tokyo"},
+  {name:"NAKAO FACTORY WORKS & Sohbi",cat:"Craft & Design",area:"Tokyo"},
+  {name:"TSUCHI-YA ガラスの器と工芸",cat:"Craft & Design",area:"Tokyo"},
+  {name:"器 まえさか",cat:"Craft & Design",area:"Tokyo"},
+  {name:"Kama-Asa",cat:"Craft & Design",area:"Kappabashi"},
+  {name:"Takaso",cat:"Craft & Design",area:"Kappabashi"},
+  {name:"Dr.Goods",cat:"Craft & Design",area:"Tokyo"},
+  {name:"ATELIER(アトリエ) 丸の内",cat:"Fashion",area:"Marunouchi"},
+  {name:"Shihara Dover Street Market Ginza",cat:"Fashion",area:"Ginza"},
+  {name:"minä perhonen materiaali",cat:"Fashion",area:"Tokyo"},
+  {name:"Tsutaya Books Daikanyama",cat:"Books",area:"Daikanyama"},
+  {name:"Isetan Shinjuku",cat:"Department Store",area:"Shinjuku"},
+  {name:"URBANIC30 AOYAMA",cat:"Fashion",area:"Aoyama"},
+  {name:"CA4LA Daikanyama Shop",cat:"Fashion",area:"Daikanyama"},
+  {name:"Margaret Howell",cat:"Fashion",area:"Tokyo"},
+  {name:"STUDIO NICHOLSON SHIBUYA PARCO",cat:"Fashion",area:"Shibuya"},
+  {name:"BEAMS JAPAN SHIBUYA",cat:"Fashion",area:"Shibuya"},
+  {name:"Beams Japan",cat:"Fashion",area:"Shinjuku"},
+  {name:"FIT TWO",cat:"Fashion",area:"Tokyo"},
+  {name:"cotogoto",cat:"Craft & Design",area:"Tokyo"},
+  {name:"The Okura Tokyo",cat:"Hotel",area:"Toranomon"},
+  {name:"JOURNAL STANDARD LUXE",cat:"Fashion",area:"Tokyo"},
+  {name:"JOURNAL STANDARD 表参道 ladies店",cat:"Fashion",area:"Omotesando"},
+  {name:"The Conran Shop",cat:"Interior",area:"Tokyo"},
+  {name:"MIDTOWN CHRISTMAS イルミネーション",cat:"Experience",area:"Roppongi"},
+  {name:"国立西洋美术馆",cat:"Museum",area:"Ueno"},
+  {name:"proto 器とタカラモノ",cat:"Craft & Design",area:"Tokyo"},
+  {name:"deps.",cat:"Craft & Design",area:"Tokyo"},
+  {name:"東京都庭園美術館",cat:"Museum",area:"Meguro"},
+  {name:"Ｆ・Ｍ・Ｎ",cat:"Craft & Design",area:"Tokyo"},
+  {name:"COMME des GARÇONS Aoyama Store",cat:"Fashion",area:"Aoyama"},
+  {name:"ARTS&SCIENCE Aoyama women flagship",cat:"Fashion",area:"Aoyama"},
+  {name:"Arts & Science Marunouchi",cat:"Fashion",area:"Marunouchi"},
+  {name:"LOVELESS AOYAMA",cat:"Fashion",area:"Aoyama"},
+  {name:"LE LABO Aoyama Store",cat:"Beauty",area:"Aoyama"},
+  {name:"エイチ ビューティー＆ユース",cat:"Fashion",area:"Tokyo"},
+  {name:"江户东京建筑园",cat:"Museum",area:"Koganei"},
+  {name:"YAECA APARTMENT STORE",cat:"Fashion",area:"Tokyo"},
+  {name:"YAECA Ebisu",cat:"Fashion",area:"Ebisu"},
+  {name:"Sippo",cat:"Café",area:"Tokyo"},
+  {name:"日本杂货 &清酒吧 DEARYOU 表参道店",cat:"Bar",area:"Omotesando"},
+  {name:"JAPAN PEARLS",cat:"Shopping",area:"Tokyo"},
+  {name:"Coverchord Nakameguro",cat:"Fashion",area:"Nakameguro"},
+  {name:"MHL Daikanyama",cat:"Fashion",area:"Daikanyama"},
+  {name:"Nanamica Daikanyama",cat:"Fashion",area:"Daikanyama"},
+  {name:"Forest Gate Daikanyama",cat:"Shopping",area:"Daikanyama"},
+  {name:"KITTE Marunouchi",cat:"Shopping",area:"Marunouchi"},
+  {name:"L\'Appartement Aoyama",cat:"Fashion",area:"Aoyama"},
+  {name:"L\'Appartement 東京店",cat:"Fashion",area:"Tokyo"},
+  {name:"AURALEE",cat:"Fashion",area:"Tokyo"},
+  {name:"BLAMINK TOKYO",cat:"Fashion",area:"Tokyo"},
+  {name:"LAND OF TOMORROW 丸之内店",cat:"Shopping",area:"Marunouchi"},
+  {name:"フリーデザイン Free Design",cat:"Interior",area:"Tokyo"},
+  {name:"SOU·SOU KYOTO Aoyama Store",cat:"Fashion",area:"Aoyama"},
+  {name:"The Harvest Kitchen General Store",cat:"Shopping",area:"Tokyo"},
+  {name:"Popeye Camera Flagship Store",cat:"Shopping",area:"Tokyo"},
+  {name:"うつわと雑貨 トラシー",cat:"Craft & Design",area:"Tokyo"},
+  {name:"Cinq",cat:"Craft & Design",area:"Tokyo"},
+  {name:"Pacific Furniture Service",cat:"Interior",area:"Tokyo"},
+  {name:"MoMA Design Store表参道",cat:"Interior",area:"Omotesando"},
+  {name:"Encounter Madu Aoyama",cat:"Interior",area:"Aoyama"},
+  {name:"Artek Tokyo Store",cat:"Interior",area:"Tokyo"},
+  {name:"Mid-Century MODERN",cat:"Interior",area:"Tokyo"},
+  {name:"合羽桥道具街",cat:"Craft & Design",area:"Kappabashi"},
+  {name:"Tool Shop Nobori",cat:"Craft & Design",area:"Kappabashi"},
+  {name:"LOST AND FOUND TOKYO STORE",cat:"Interior",area:"Tokyo"},
+  {name:"club d by D&DESIGN",cat:"Interior",area:"Tokyo"},
+  {name:"OZEKI Tokyo Gallery",cat:"Craft & Design",area:"Tokyo"},
+  {name:"D&DEPARTMENT TOKYO",cat:"Interior",area:"Tokyo"},
+  {name:"LEMAIRE恵比寿",cat:"Fashion",area:"Ebisu"},
+  {name:"Kyuko",cat:"Craft & Design",area:"Tokyo"},
+  // From Kanto list — Tokyo places only
+  {name:"Ginza Kagari - Soba",cat:"Ramen",area:"Ginza"},
+  {name:"TRAVELER\'S FACTORY STATION",cat:"Stationery",area:"Tokyo"},
+  {name:"Kizuna",cat:"Restaurant",area:"Tokyo"},
+  {name:"DOLCE TACUBO CAFFE",cat:"Café",area:"Tokyo"},
+  {name:"DOLCE TACUBO",cat:"Restaurant",area:"Tokyo"},
+  {name:"Miko Sushi Ginza",cat:"Sushi",area:"Ginza"},
+  {name:"PÂTISSERIE ASAKO IWAYANAGI",cat:"Bakery",area:"Tokyo"},
+  {name:"BIEN-ETRE MAISON",cat:"Café",area:"Tokyo"},
+  {name:"Shinjuku Kitamura Camera",cat:"Shopping",area:"Shinjuku"},
+  {name:"Tokyo Midtown Design Hub",cat:"Museum",area:"Roppongi"},
+  {name:"东京中城",cat:"Shopping",area:"Roppongi"},
+  {name:"21_21 设计视野",cat:"Museum",area:"Roppongi"},
+  {name:"草月会館",cat:"Culture",area:"Tokyo"},
+  {name:"Museum of Contemporary Art Tokyo (MOT)",cat:"Museum",area:"Kiyosumi"},
+  {name:"Rāmenya Shima",cat:"Ramen",area:"Tokyo"},
+  {name:"Tsukiji Itadori Uogashi Senryo",cat:"Sushi",area:"Tsukiji"},
+  {name:"Imahan Annex",cat:"Restaurant",area:"Tokyo"},
+  {name:"MERCER BRUNCH ROPPONGI",cat:"Restaurant",area:"Roppongi"},
+  {name:"OMO5 Tokyo Gotanda by Hoshino Resorts",cat:"Hotel",area:"Gotanda"},
+  {name:"Daikanyama Issai Kassai",cat:"Craft & Design",area:"Daikanyama"},
+  {name:"Roppongi Inakaya",cat:"Restaurant",area:"Roppongi"},
+  {name:"ART AQUARIUM MUSEUM",cat:"Museum",area:"Ginza"},
+  {name:"GINZA SIX",cat:"Shopping",area:"Ginza"},
+  {name:"宫下公园",cat:"Park",area:"Shibuya"}
+];
 
 // ── Render ──
-function getAllPlaces() {
-  return [
-    ...PLACES.tokyo.map(p => ({...p, list: 'tokyo'})),
-    ...PLACES.kanto.map(p => ({...p, list: 'kanto'}))
-  ];
-}
-
 function getCategories() {
   const cats = new Set();
-  getAllPlaces().forEach(p => cats.add(p.cat));
+  PLACES.forEach(p => cats.add(p.cat));
   return [...cats].sort();
 }
 
-function renderGrid(gridId, places) {
-  const grid = document.getElementById(gridId);
+function renderGrid(places) {
+  const grid = document.getElementById('grid-tokyo');
   if (!places.length) {
     grid.innerHTML = '<div class="no-results"><p>No places found</p></div>';
     return;
@@ -568,7 +543,6 @@ function renderGrid(gridId, places) {
       <span class="place-category">${p.cat}</span>
       <div class="place-name">${p.name}</div>
       <div class="place-area">${p.area}</div>
-      ${p.note ? `<div class="place-note">${p.note}</div>` : ''}
     </div>
   `).join('');
 }
@@ -582,42 +556,30 @@ function renderCategories() {
 
 function filterPlaces(query, category) {
   const q = query.toLowerCase();
-  const filterFn = p => {
+  const filtered = PLACES.filter(p => {
     const matchQuery = !q || p.name.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q) || p.area.toLowerCase().includes(q);
     const matchCat = !category || category === 'all' || p.cat === category;
     return matchQuery && matchCat;
-  };
-
-  const tokyoFiltered = PLACES.tokyo.filter(filterFn);
-  const kantoFiltered = PLACES.kanto.filter(filterFn);
-
-  renderGrid('grid-tokyo', tokyoFiltered);
-  renderGrid('grid-kanto', kantoFiltered);
-
-  document.getElementById('section-tokyo').style.display = tokyoFiltered.length ? '' : 'none';
-  document.getElementById('section-kanto').style.display = kantoFiltered.length ? '' : 'none';
-
-  const total = tokyoFiltered.length + kantoFiltered.length;
-  document.getElementById('result-count').textContent = total + ' places';
+  });
+  renderGrid(filtered);
+  document.getElementById('result-count').textContent = filtered.length + ' places';
+  document.getElementById('places-subtitle').textContent = filtered.length + ' places in Tokyo';
 }
 
 // ── Init ──
-const allPlaces = getAllPlaces();
 const cats = getCategories();
-
-document.getElementById('stat-places').textContent = allPlaces.length;
+document.getElementById('stat-places').textContent = PLACES.length;
 document.getElementById('stat-categories').textContent = cats.length;
+document.getElementById('stat-lists').textContent = '1';
 
 renderCategories();
 filterPlaces('', 'all');
 
-// Search
 document.getElementById('search-input').addEventListener('input', e => {
   const activeCat = document.querySelector('.cat-btn.active')?.dataset.cat || 'all';
   filterPlaces(e.target.value, activeCat);
 });
 
-// Categories
 document.getElementById('categories').addEventListener('click', e => {
   if (e.target.classList.contains('cat-btn')) {
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -626,7 +588,6 @@ document.getElementById('categories').addEventListener('click', e => {
   }
 });
 
-// Toolbar scroll
 const toolbar = document.getElementById('toolbar');
 const observer = new IntersectionObserver(([e]) => {
   toolbar.classList.toggle('scrolled', !e.isIntersecting);
