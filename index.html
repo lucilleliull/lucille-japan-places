@@ -270,11 +270,14 @@ body {
   border: 1px solid var(--stone);
 }
 
-.place-card {
+a.place-card, .place-card {
+  display: block;
   background: var(--washi-warm);
   padding: 1.3rem 1.5rem;
   transition: background 0.2s ease;
-  cursor: default;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 }
 
 .place-card:hover { background: #FFF; }
@@ -538,13 +541,16 @@ function renderGrid(places) {
     grid.innerHTML = '<div class="no-results"><p>No places found</p></div>';
     return;
   }
-  grid.innerHTML = places.map(p => `
-    <div class="place-card" data-cat="${p.cat}">
+  grid.innerHTML = places.map(p => {
+    const q = encodeURIComponent(p.name + ' ' + p.area + ' Tokyo');
+    const url = 'https://www.google.com/maps/search/' + q;
+    return `
+    <a class="place-card" data-cat="${p.cat}" href="${url}" target="_blank" rel="noopener">
       <span class="place-category">${p.cat}</span>
       <div class="place-name">${p.name}</div>
       <div class="place-area">${p.area}</div>
-    </div>
-  `).join('');
+    </a>`;
+  }).join('');
 }
 
 function renderCategories() {
