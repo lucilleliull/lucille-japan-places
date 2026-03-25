@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucille's Japan List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --washi: #F5F0E8;
+  --washi-warm: #FAF7F0;
+  --sumi: #1C1917;
+  --sumi-light: #44403C;
+  --sumi-faded: #78716C;
+  --beni: #B91C1C;
+  --beni-soft: #DC2626;
+  --ai: #1E3A5F;
+  --matcha: #4D6B4A;
+  --matcha-pale: #E8EDE3;
+  --kincha: #C4922A;
+  --kincha-light: #F5EDD8;
+  --stone: #D6D3D1;
+  --stone-dark: #A8A29E;
+
+  --font-display: 'Cormorant Garamond', 'Shippori Mincho', serif;
+  --font-body: 'DM Sans', 'Noto Sans JP', sans-serif;
+  --font-jp: 'Shippori Mincho', 'Noto Sans JP', serif;
+
+  --shadow-sm: 0 1px 3px rgba(28,25,23,0.05);
+  --shadow-md: 0 4px 16px rgba(28,25,23,0.07);
+}
+
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body {
+  font-family: var(--font-body);
+  background: var(--washi);
+  color: var(--sumi);
+  line-height: 1.6;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Hero ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  background: var(--washi-warm);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 40%, rgba(185,28,28,0.03) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 60%, rgba(30,58,95,0.02) 0%, transparent 60%);
+}
+
+.hero-content {
+  position: relative; z-index: 1;
+  text-align: center;
+  max-width: 680px;
+}
+
+.hero-kanji {
+  font-family: var(--font-jp);
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  color: var(--beni);
+  letter-spacing: 0.6em;
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+  opacity: 0; animation: fadeUp 1s ease-out 0.2s forwards;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 8vw, 7rem);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: var(--sumi);
+  margin-bottom: 1rem;
+  opacity: 0; animation: fadeUp 1s ease-out 0.4s forwards;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--beni);
+}
+
+.hero-subtitle {
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  color: var(--sumi-faded);
+  max-width: 460px;
+  margin: 0 auto 2.5rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  opacity: 0; animation: fadeUp 1s ease-out 0.6s forwards;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+  opacity: 0; animation: fadeUp 1s ease-out 0.8s forwards;
+}
+
+.hero-stat-number {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.hero-stat-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--stone-dark);
+  margin-top: 0.3rem;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0; animation: fadeUp 1s ease-out 1.2s forwards;
+}
+
+.scroll-hint svg { width: 18px; color: var(--stone-dark); animation: bounce 2s ease-in-out infinite; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+/* ── Toolbar ── */
+.toolbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(245,240,232,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(214,211,209,0.5);
+  transition: box-shadow 0.3s ease;
+}
+
+.toolbar.scrolled { box-shadow: 0 2px 20px rgba(28,25,23,0.05); }
+
+.toolbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.8rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.toolbar-logo {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 400;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.toolbar-logo em { font-style: italic; color: var(--beni); }
+
+.search-box {
+  flex: 1;
+  min-width: 180px;
+  max-width: 360px;
+  position: relative;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.55rem 1rem 0.55rem 2.2rem;
+  border: 1px solid var(--stone);
+  border-radius: 100px;
+  background: var(--washi-warm);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: var(--sumi);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-box input:focus {
+  border-color: var(--beni-soft);
+  box-shadow: 0 0 0 3px rgba(185,28,28,0.06);
+}
+
+.search-box input::placeholder { color: var(--stone-dark); }
+
+.search-box svg {
+  position: absolute;
+  left: 0.8rem; top: 50%; transform: translateY(-50%);
+  width: 13px; height: 13px; color: var(--stone-dark);
+}
+
+.categories {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.cat-btn {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--stone);
+  border-radius: 100px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--sumi-faded);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.cat-btn:hover { border-color: var(--sumi-light); color: var(--sumi); }
+.cat-btn.active {
+  background: var(--sumi);
+  color: var(--washi);
+  border-color: var(--sumi);
+}
+
+.result-count {
+  font-size: 0.72rem;
+  color: var(--stone-dark);
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+/* ── Places Grid ── */
+.places-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem 4rem;
+}
+
+.list-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 300;
+  margin-bottom: 0.3rem;
+  letter-spacing: -0.01em;
+}
+
+.list-subtitle {
+  font-size: 0.78rem;
+  color: var(--sumi-faded);
+  margin-bottom: 2rem;
+}
+
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--stone);
+  border: 1px solid var(--stone);
+}
+
+.place-card {
+  background: var(--washi-warm);
+  padding: 1.3rem 1.5rem;
+  transition: background 0.2s ease;
+  cursor: default;
+}
+
+.place-card:hover { background: #FFF; }
+
+.place-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.3;
+  margin-bottom: 0.3rem;
+  letter-spacing: -0.01em;
+}
+
+.place-category {
+  display: inline-block;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--beni);
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+
+.place-area {
+  font-size: 0.72rem;
+  color: var(--sumi-faded);
+}
+
+.place-note {
+  font-size: 0.72rem;
+  color: var(--sumi-faded);
+  font-style: italic;
+  margin-top: 0.3rem;
+}
+
+/* ── Section Divider ── */
+.section-divider {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section-divider hr {
+  border: none;
+  height: 1px;
+  background: var(--stone);
+}
+
+/* ── Footer ── */
+.footer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--stone-dark);
+}
+
+.footer a { color: var(--sumi-faded); text-decoration: none; }
+.footer a:hover { color: var(--beni); }
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .hero { min-height: 85vh; padding: 1.5rem; }
+  .hero-stats { gap: 2rem; }
+  .toolbar-inner { padding: 0.6rem 1rem; }
+  .places-section { padding: 2rem 1rem 3rem; }
+  .places-grid { grid-template-columns: 1fr; }
+  .categories { display: none; }
+}
+
+/* No visible places state */
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--washi-warm);
+}
+
+.no-results p {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--sumi-faded);
+}
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-kanji">日本 · JAPAN</p>
+    <h1 class="hero-title">Lucille's<br><em>Japan</em> List</h1>
+    <p class="hero-subtitle">A personal collection of places I love across Japan — shops, cafés, restaurants, museums, and hidden gems curated over years of exploring.</p>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-number" id="stat-places">0</div>
+        <div class="hero-stat-label">Places</div>
+      </div>
+      <div>
+        <div class="hero-stat-number" id="stat-categories">0</div>
+        <div class="hero-stat-label">Categories</div>
+      </div>
+      <div>
+        <div class="hero-stat-number" id="stat-lists">2</div>
+        <div class="hero-stat-label">Lists</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
+
+<!-- Toolbar -->
+<nav class="toolbar" id="toolbar">
+  <div class="toolbar-inner">
+    <div class="toolbar-logo">Lucille's <em>Japan</em></div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" placeholder="Search places..." id="search-input">
+    </div>
+    <div class="categories" id="categories"></div>
+    <div class="result-count" id="result-count"></div>
+  </div>
+</nav>
+
+<!-- Tokyo List -->
+<section class="places-section" id="section-tokyo">
+  <h2 class="list-title">Tokyo</h2>
+  <p class="list-subtitle">81 places · jingi sun's shared list</p>
+  <div class="places-grid" id="grid-tokyo"></div>
+</section>
+
+<div class="section-divider"><hr></div>
+
+<!-- Kanto List -->
+<section class="places-section" id="section-kanto">
+  <h2 class="list-title">日本関東地区</h2>
+  <p class="list-subtitle">30 places · Lucille Liu's collection</p>
+  <div class="places-grid" id="grid-kanto"></div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>Curated by Lucille · Built with care · <a href="https://maps.app.goo.gl/vE2bLxB5yPWj47bK7">Tokyo Map</a> · <a href="https://maps.app.goo.gl/W81WK6EmNVh8erZF7">Kanto Map</a></p>
+</footer>
+
+<script>
+// ── Place Data ──
+const PLACES = {
+  tokyo: [
+    {name:"Ramen Takahashi",cat:"Ramen",area:"Tokyo"},
+    {name:"Birkenstock",cat:"Shopping",area:"Tokyo"},
+    {name:"Blue Bottle Coffee Ginza Cafe",cat:"Coffee",area:"Ginza"},
+    {name:"Glitch Coffee and Roasters GINZA",cat:"Coffee",area:"Ginza"},
+    {name:"BONGENCOFFEE Ginza",cat:"Coffee",area:"Ginza"},
+    {name:"Hard Off",cat:"Shopping",area:"Tokyo"},
+    {name:"Fujisan Shokupan",cat:"Bakery",area:"Tokyo"},
+    {name:"Longtemps",cat:"Bakery",area:"Tokyo"},
+    {name:"APPLE PIE lab",cat:"Bakery",area:"Tokyo"},
+    {name:"mont-bell Tokyo Kyobashi",cat:"Shopping",area:"Kyobashi"},
+    {name:"NAKAO SHOP & OFFICE",cat:"Craft & Design",area:"Tokyo"},
+    {name:"NAKAO FACTORY WORKS & Sohbi",cat:"Craft & Design",area:"Tokyo"},
+    {name:"TSUCHI-YA ガラスの器と工芸",cat:"Craft & Design",area:"Tokyo"},
+    {name:"器 まえさか",cat:"Craft & Design",area:"Tokyo"},
+    {name:"Kama-Asa",cat:"Craft & Design",area:"Kappabashi"},
+    {name:"Takaso",cat:"Craft & Design",area:"Kappabashi"},
+    {name:"Dr.Goods",cat:"Craft & Design",area:"Tokyo"},
+    {name:"ATELIER(アトリエ) 丸の内",cat:"Fashion",area:"Marunouchi"},
+    {name:"Shihara Dover Street Market Ginza",cat:"Fashion",area:"Ginza"},
+    {name:"minä perhonen materiaali",cat:"Fashion",area:"Tokyo"},
+    {name:"Tsutaya Books Daikanyama",cat:"Books",area:"Daikanyama"},
+    {name:"Isetan Shinjuku",cat:"Department Store",area:"Shinjuku"},
+    {name:"URBANIC30 AOYAMA",cat:"Fashion",area:"Aoyama"},
+    {name:"CA4LA Daikanyama Shop",cat:"Fashion",area:"Daikanyama"},
+    {name:"Margaret Howell",cat:"Fashion",area:"Tokyo"},
+    {name:"STUDIO NICHOLSON SHIBUYA PARCO",cat:"Fashion",area:"Shibuya"},
+    {name:"BEAMS JAPAN SHIBUYA",cat:"Fashion",area:"Shibuya"},
+    {name:"Beams Japan",cat:"Fashion",area:"Shinjuku"},
+    {name:"FIT TWO",cat:"Fashion",area:"Tokyo"},
+    {name:"cotogoto",cat:"Craft & Design",area:"Tokyo"},
+    {name:"The Okura Tokyo",cat:"Hotel",area:"Toranomon"},
+    {name:"JOURNAL STANDARD LUXE",cat:"Fashion",area:"Tokyo"},
+    {name:"JOURNAL STANDARD 表参道 ladies店",cat:"Fashion",area:"Omotesando"},
+    {name:"The Conran Shop",cat:"Interior",area:"Tokyo"},
+    {name:"MIDTOWN CHRISTMAS イルミネーション",cat:"Experience",area:"Roppongi"},
+    {name:"国立西洋美术馆",cat:"Museum",area:"Ueno"},
+    {name:"proto 器とタカラモノ",cat:"Craft & Design",area:"Tokyo"},
+    {name:"deps.",cat:"Craft & Design",area:"Tokyo"},
+    {name:"東京都庭園美術館",cat:"Museum",area:"Meguro"},
+    {name:"Ｆ・Ｍ・Ｎ",cat:"Craft & Design",area:"Tokyo"},
+    {name:"COMME des GARÇONS Aoyama Store",cat:"Fashion",area:"Aoyama"},
+    {name:"ARTS&SCIENCE Aoyama women flagship",cat:"Fashion",area:"Aoyama"},
+    {name:"Arts & Science Marunouchi",cat:"Fashion",area:"Marunouchi"},
+    {name:"LOVELESS AOYAMA",cat:"Fashion",area:"Aoyama"},
+    {name:"LE LABO Aoyama Store",cat:"Beauty",area:"Aoyama"},
+    {name:"エイチ ビューティー＆ユース",cat:"Fashion",area:"Tokyo"},
+    {name:"江户东京建筑园",cat:"Museum",area:"Koganei"},
+    {name:"YAECA APARTMENT STORE",cat:"Fashion",area:"Tokyo"},
+    {name:"YAECA Ebisu",cat:"Fashion",area:"Ebisu"},
+    {name:"Sippo",cat:"Café",area:"Tokyo"},
+    {name:"日本杂货 &清酒吧 DEARYOU 表参道店",cat:"Bar",area:"Omotesando"},
+    {name:"JAPAN PEARLS",cat:"Shopping",area:"Tokyo"},
+    {name:"Coverchord Nakameguro",cat:"Fashion",area:"Nakameguro"},
+    {name:"MHL Daikanyama",cat:"Fashion",area:"Daikanyama"},
+    {name:"Nanamica Daikanyama",cat:"Fashion",area:"Daikanyama"},
+    {name:"Forest Gate Daikanyama",cat:"Shopping",area:"Daikanyama"},
+    {name:"KITTE Marunouchi",cat:"Shopping",area:"Marunouchi"},
+    {name:"L'Appartement Aoyama",cat:"Fashion",area:"Aoyama"},
+    {name:"L'Appartement 東京店",cat:"Fashion",area:"Tokyo"},
+    {name:"AURALEE",cat:"Fashion",area:"Tokyo"},
+    {name:"BLAMINK TOKYO",cat:"Fashion",area:"Tokyo"},
+    {name:"LAND OF TOMORROW 丸之内店",cat:"Shopping",area:"Marunouchi"},
+    {name:"フリーデザイン Free Design",cat:"Interior",area:"Tokyo"},
+    {name:"SOU·SOU KYOTO Aoyama Store",cat:"Fashion",area:"Aoyama"},
+    {name:"The Harvest Kitchen General Store",cat:"Shopping",area:"Tokyo"},
+    {name:"Popeye Camera Flagship Store",cat:"Shopping",area:"Tokyo"},
+    {name:"うつわと雑貨 トラシー",cat:"Craft & Design",area:"Tokyo"},
+    {name:"Cinq",cat:"Craft & Design",area:"Tokyo"},
+    {name:"Pacific Furniture Service",cat:"Interior",area:"Tokyo"},
+    {name:"MoMA Design Store表参道",cat:"Interior",area:"Omotesando"},
+    {name:"Encounter Madu Aoyama",cat:"Interior",area:"Aoyama"},
+    {name:"Artek Tokyo Store",cat:"Interior",area:"Tokyo"},
+    {name:"Mid-Century MODERN",cat:"Interior",area:"Tokyo"},
+    {name:"合羽桥道具街",cat:"Craft & Design",area:"Kappabashi"},
+    {name:"Tool Shop Nobori",cat:"Craft & Design",area:"Kappabashi"},
+    {name:"LOST AND FOUND TOKYO STORE",cat:"Interior",area:"Tokyo"},
+    {name:"club d by D&DESIGN",cat:"Interior",area:"Tokyo"},
+    {name:"OZEKI Tokyo Gallery",cat:"Craft & Design",area:"Tokyo"},
+    {name:"D&DEPARTMENT TOKYO",cat:"Interior",area:"Tokyo"},
+    {name:"LEMAIRE恵比寿",cat:"Fashion",area:"Ebisu"},
+    {name:"Kyuko",cat:"Craft & Design",area:"Tokyo"}
+  ],
+  kanto: [
+    {name:"Ekkamai BTS Station",cat:"Transit",area:"Tokyo"},
+    {name:"Ginza Kagari - Soba",cat:"Ramen",area:"Ginza"},
+    {name:"TRAVELER'S FACTORY STATION",cat:"Stationery",area:"Tokyo"},
+    {name:"Kizuna",cat:"Restaurant",area:"Tokyo"},
+    {name:"船津滨温泉街",cat:"Onsen",area:"Fuji"},
+    {name:"DOLCE TACUBO CAFFE",cat:"Café",area:"Tokyo"},
+    {name:"DOLCE TACUBO",cat:"Restaurant",area:"Tokyo"},
+    {name:"Miko Sushi Ginza",cat:"Sushi",area:"Ginza"},
+    {name:"PÂTISSERIE ASAKO IWAYANAGI",cat:"Bakery",area:"Tokyo"},
+    {name:"BIEN-ETRE MAISON",cat:"Café",area:"Tokyo"},
+    {name:"Shinjuku Kitamura Camera",cat:"Shopping",area:"Shinjuku"},
+    {name:"Tokyo Midtown Design Hub",cat:"Museum",area:"Roppongi"},
+    {name:"东京中城",cat:"Shopping",area:"Roppongi"},
+    {name:"21_21 设计视野",cat:"Museum",area:"Roppongi"},
+    {name:"草月会館",cat:"Culture",area:"Tokyo"},
+    {name:"Museum of Contemporary Art Tokyo (MOT)",cat:"Museum",area:"Kiyosumi"},
+    {name:"Rāmenya Shima",cat:"Ramen",area:"Tokyo"},
+    {name:"Tsukiji Itadori Uogashi Senryo",cat:"Sushi",area:"Tsukiji"},
+    {name:"Imahan Annex",cat:"Restaurant",area:"Tokyo"},
+    {name:"MERCER BRUNCH ROPPONGI",cat:"Restaurant",area:"Roppongi"},
+    {name:"OMO5 Tokyo Gotanda by Hoshino Resorts",cat:"Hotel",area:"Gotanda"},
+    {name:"Daikanyama Issai Kassai",cat:"Craft & Design",area:"Daikanyama"},
+    {name:"三井奥特莱斯购物城 木更津",cat:"Shopping",area:"Kisarazu"},
+    {name:"Roppongi Inakaya",cat:"Restaurant",area:"Roppongi"},
+    {name:"ART AQUARIUM MUSEUM",cat:"Museum",area:"Ginza"},
+    {name:"GINZA SIX",cat:"Shopping",area:"Ginza"},
+    {name:"宫下公园",cat:"Park",area:"Shibuya"},
+    {name:"The Okura Tokyo",cat:"Hotel",area:"Toranomon"},
+    {name:"Hoshinoya Karuizawa",cat:"Hotel",area:"Karuizawa"},
+    {name:"富士山",cat:"Nature",area:"Fuji"}
+  ]
+};
+
+// ── Render ──
+function getAllPlaces() {
+  return [
+    ...PLACES.tokyo.map(p => ({...p, list: 'tokyo'})),
+    ...PLACES.kanto.map(p => ({...p, list: 'kanto'}))
+  ];
+}
+
+function getCategories() {
+  const cats = new Set();
+  getAllPlaces().forEach(p => cats.add(p.cat));
+  return [...cats].sort();
+}
+
+function renderGrid(gridId, places) {
+  const grid = document.getElementById(gridId);
+  if (!places.length) {
+    grid.innerHTML = '<div class="no-results"><p>No places found</p></div>';
+    return;
+  }
+  grid.innerHTML = places.map(p => `
+    <div class="place-card" data-cat="${p.cat}">
+      <span class="place-category">${p.cat}</span>
+      <div class="place-name">${p.name}</div>
+      <div class="place-area">${p.area}</div>
+      ${p.note ? `<div class="place-note">${p.note}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function renderCategories() {
+  const cats = getCategories();
+  const container = document.getElementById('categories');
+  container.innerHTML = '<button class="cat-btn active" data-cat="all">All</button>' +
+    cats.map(c => `<button class="cat-btn" data-cat="${c}">${c}</button>`).join('');
+}
+
+function filterPlaces(query, category) {
+  const q = query.toLowerCase();
+  const filterFn = p => {
+    const matchQuery = !q || p.name.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q) || p.area.toLowerCase().includes(q);
+    const matchCat = !category || category === 'all' || p.cat === category;
+    return matchQuery && matchCat;
+  };
+
+  const tokyoFiltered = PLACES.tokyo.filter(filterFn);
+  const kantoFiltered = PLACES.kanto.filter(filterFn);
+
+  renderGrid('grid-tokyo', tokyoFiltered);
+  renderGrid('grid-kanto', kantoFiltered);
+
+  document.getElementById('section-tokyo').style.display = tokyoFiltered.length ? '' : 'none';
+  document.getElementById('section-kanto').style.display = kantoFiltered.length ? '' : 'none';
+
+  const total = tokyoFiltered.length + kantoFiltered.length;
+  document.getElementById('result-count').textContent = total + ' places';
+}
+
+// ── Init ──
+const allPlaces = getAllPlaces();
+const cats = getCategories();
+
+document.getElementById('stat-places').textContent = allPlaces.length;
+document.getElementById('stat-categories').textContent = cats.length;
+
+renderCategories();
+filterPlaces('', 'all');
+
+// Search
+document.getElementById('search-input').addEventListener('input', e => {
+  const activeCat = document.querySelector('.cat-btn.active')?.dataset.cat || 'all';
+  filterPlaces(e.target.value, activeCat);
+});
+
+// Categories
+document.getElementById('categories').addEventListener('click', e => {
+  if (e.target.classList.contains('cat-btn')) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    filterPlaces(document.getElementById('search-input').value, e.target.dataset.cat);
+  }
+});
+
+// Toolbar scroll
+const toolbar = document.getElementById('toolbar');
+const observer = new IntersectionObserver(([e]) => {
+  toolbar.classList.toggle('scrolled', !e.isIntersecting);
+}, { threshold: 0 });
+observer.observe(document.querySelector('.hero'));
+</script>
+</body>
+</html>
