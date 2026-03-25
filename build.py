@@ -1,24 +1,36 @@
 #!/usr/bin/env python3
-"""Build the complete index.html for Lucille & Sun's Tokyo List."""
+"""Build the complete index.html for Lucille & Sun's Tokyo List v3."""
 import json, math
 
-# Load enriched data
 with open("places_enriched.json") as f:
     places = json.load(f)
 
-# Compute weighted scores for Top Picks
+# Compute weighted scores
 for p in places:
     p["score"] = p["rating"] * math.log(p.get("reviews", 1) + 1)
 
-# Sort for top picks
+# Top 20
 top_sorted = sorted(places, key=lambda x: x["score"], reverse=True)
 top_names = [p["name"] for p in top_sorted[:20]]
 
-# Get unique areas and categories
-areas = sorted(set(p["area"] for p in places))
-cats = sorted(set(p["cat"] for p in places))
+# Remove "Tokyo" as area — it's too generic. Replace with empty string for display
+for p in places:
+    if p["area"] == "Tokyo":
+        p["area"] = ""
 
-# Build JS data
+# Get categories sorted by count
+cat_counts = {}
+for p in places:
+    cat_counts[p["cat"]] = cat_counts.get(p["cat"], 0) + 1
+cats_sorted = sorted(cat_counts.items(), key=lambda x: -x[1])
+
+# Get areas (non-empty) sorted by count
+area_counts = {}
+for p in places:
+    if p["area"]:
+        area_counts[p["area"]] = area_counts.get(p["area"], 0) + 1
+areas_sorted = sorted(area_counts.items(), key=lambda x: -x[1])
+
 js_places = json.dumps(places, ensure_ascii=False)
 js_top = json.dumps(top_names, ensure_ascii=False)
 
@@ -46,22 +58,26 @@ html = f'''<!DOCTYPE html>
 html{{scroll-behavior:smooth;overflow-x:hidden}}
 body{{font-family:var(--font-body);background:var(--washi);color:var(--sumi);line-height:1.6;font-weight:300;-webkit-font-smoothing:antialiased}}
 
+/* Animations */
+@keyframes fadeUp{{from{{opacity:0;transform:translateY(20px)}}to{{opacity:1;transform:translateY(0)}}}}
+@keyframes bounce{{0%,100%{{transform:translateY(0)}}50%{{transform:translateY(6px)}}}}
+
+/* Hero */
 .hero{{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden;background:var(--washi-warm)}}
 .hero::before{{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 40%,rgba(185,28,28,0.03) 0%,transparent 60%),radial-gradient(ellipse at 80% 60%,rgba(30,58,95,0.02) 0%,transparent 60%)}}
 .hero-content{{position:relative;z-index:1;text-align:center;max-width:680px}}
-.hero-kanji{{font-family:var(--font-jp);font-size:clamp(0.8rem,1.2vw,1rem);color:var(--beni);letter-spacing:0.6em;margin-bottom:1.5rem;font-weight:400}}
-.hero-title{{font-family:var(--font-display);font-size:clamp(2.8rem,6vw,5rem);font-weight:300;line-height:1.1;letter-spacing:-0.03em;color:var(--sumi);margin-bottom:1rem}}
+.hero-kanji{{font-family:var(--font-jp);font-size:clamp(0.8rem,1.2vw,1rem);color:var(--beni);letter-spacing:0.6em;margin-bottom:1.5rem;font-weight:400;opacity:0;animation:fadeUp 1s ease-out 0.2s forwards}}
+.hero-title{{font-family:var(--font-display);font-size:clamp(3.2rem,8vw,7rem);font-weight:300;line-height:0.92;letter-spacing:-0.03em;color:var(--sumi);margin-bottom:1rem;opacity:0;animation:fadeUp 1s ease-out 0.4s forwards}}
 .hero-title em{{font-style:italic;color:var(--beni)}}
-.hero-sub{{color:var(--sumi-faded);font-size:1.05rem;letter-spacing:0.02em;margin-bottom:2rem}}
-.hero-stats{{display:flex;gap:2.5rem;justify-content:center;margin-top:2.5rem}}
+.hero-subtitle{{font-size:clamp(0.85rem,1.2vw,1rem);color:var(--sumi-faded);max-width:460px;margin:0 auto 2.5rem;font-weight:300;letter-spacing:0.02em;opacity:0;animation:fadeUp 1s ease-out 0.6s forwards}}
+.hero-stats{{display:flex;gap:3rem;justify-content:center;opacity:0;animation:fadeUp 1s ease-out 0.8s forwards}}
 .hero-stat{{text-align:center}}
-.hero-stat-num{{font-family:var(--font-display);font-size:2rem;font-weight:300;color:var(--sumi)}}
-.hero-stat-label{{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--stone-dark);margin-top:0.2rem}}
-.scroll-hint{{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);text-align:center}}
-.scroll-hint span{{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--stone-dark);display:block;margin-bottom:0.5rem}}
-@keyframes bounce{{0%,100%{{transform:translateY(0)}}50%{{transform:translateY(6px)}}}}
+.hero-stat-num{{font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--sumi)}}
+.hero-stat-label{{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--stone-dark);margin-top:0.2rem}}
+.scroll-hint{{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);text-align:center;opacity:0;animation:fadeUp 1s ease-out 1.2s forwards}}
 .scroll-hint svg{{width:18px;color:var(--stone-dark);animation:bounce 2s ease-in-out infinite}}
 
+/* Toolbar */
 .toolbar{{position:sticky;top:0;z-index:100;background:rgba(245,240,232,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(214,211,209,0.5);padding:0.8rem 2rem;transition:box-shadow 0.3s}}
 .toolbar.scrolled{{box-shadow:var(--shadow-md)}}
 .toolbar-inner{{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}}
@@ -73,38 +89,47 @@ body{{font-family:var(--font-body);background:var(--washi);color:var(--sumi);lin
 .search-box svg{{position:absolute;left:0.7rem;top:50%;transform:translateY(-50%);width:14px;color:var(--sumi-faded)}}
 .result-count{{font-size:0.75rem;color:var(--sumi-faded);white-space:nowrap}}
 
+/* Sections */
 .section{{max-width:1200px;margin:0 auto;padding:3rem 2rem}}
-.section-header{{margin-bottom:2rem}}
+.section-header{{margin-bottom:1.5rem}}
 .section-title{{font-family:var(--font-display);font-size:clamp(1.8rem,3vw,2.5rem);font-weight:300;letter-spacing:-0.02em}}
 .section-title em{{font-style:italic;color:var(--beni)}}
-.section-sub{{color:var(--sumi-faded);font-size:0.9rem;margin-top:0.5rem}}
+.section-sub{{color:var(--sumi-faded);font-size:0.9rem;margin-top:0.3rem}}
 
-.top-picks-grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem}}
-.top-card{{background:white;border-radius:10px;padding:1.2rem 1.4rem;text-decoration:none;color:inherit;border:1.5px solid transparent;transition:all 0.25s;position:relative;overflow:hidden;display:block}}
-.top-card::before{{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--beni);opacity:0;transition:opacity 0.25s}}
-.top-card:hover{{border-color:var(--beni);box-shadow:var(--shadow-lg);transform:translateY(-2px)}}
-.top-card:hover::before{{opacity:1}}
-.top-rank{{position:absolute;top:0.6rem;right:1rem;font-family:var(--font-display);font-size:2rem;font-weight:300;color:rgba(185,28,28,0.1);line-height:1}}
-.top-card-name{{font-family:var(--font-display);font-size:1.15rem;font-weight:500;margin-bottom:0.4rem;padding-right:2rem;line-height:1.3}}
-.top-card-meta{{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;font-size:0.78rem;color:var(--sumi-faded)}}
+/* Top Picks — compact horizontal strip */
+.top-strip{{display:flex;gap:0.8rem;overflow-x:auto;padding-bottom:0.5rem;scrollbar-width:thin;scrollbar-color:var(--stone) transparent}}
+.top-strip::-webkit-scrollbar{{height:4px}}
+.top-strip::-webkit-scrollbar-thumb{{background:var(--stone);border-radius:2px}}
+.top-chip{{flex-shrink:0;background:white;border-radius:8px;padding:0.6rem 1rem;text-decoration:none;color:inherit;border:1px solid rgba(214,211,209,0.4);transition:all 0.2s;display:flex;align-items:center;gap:0.6rem;min-width:0}}
+.top-chip:hover{{border-color:var(--beni);box-shadow:var(--shadow-md);transform:translateY(-1px)}}
+.top-chip-rank{{font-family:var(--font-display);font-size:1.1rem;font-weight:300;color:var(--beni);opacity:0.5;min-width:1.5rem}}
+.top-chip-name{{font-family:var(--font-display);font-size:0.9rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}}
+.top-chip-rating{{font-size:0.75rem;color:var(--kincha);font-weight:500;white-space:nowrap}}
+
+/* Category sections */
+.cat-section{{margin-bottom:3rem}}
+.cat-header{{display:flex;align-items:baseline;gap:1rem;margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--stone)}}
+.cat-name{{font-family:var(--font-display);font-size:1.5rem;font-weight:400;letter-spacing:-0.01em}}
+.cat-count{{font-size:0.8rem;color:var(--sumi-faded)}}
+
+/* Place cards in category grid */
+.cat-grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0.8rem}}
+.place-card{{background:white;border-radius:8px;padding:0.9rem 1.1rem;text-decoration:none;color:inherit;transition:all 0.2s;display:block;border:1px solid rgba(214,211,209,0.3)}}
+.place-card:hover{{box-shadow:var(--shadow-md);transform:translateY(-1px);border-color:var(--stone)}}
+.place-card-name{{font-family:var(--font-display);font-size:1rem;font-weight:500;margin-bottom:0.3rem;line-height:1.3}}
+.place-card-meta{{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;font-size:0.78rem;color:var(--sumi-faded)}}
 .star{{color:var(--kincha);font-weight:500}}
 .reviews{{color:var(--sumi-faded)}}
 .price-tag{{color:var(--beni);font-weight:400}}
-.area-badge{{display:inline-block;padding:0.12rem 0.45rem;border-radius:3px;background:var(--kincha-light);color:var(--kincha);font-size:0.7rem;font-weight:500;letter-spacing:0.03em}}
-.cat-tag{{font-size:0.7rem;color:var(--sumi-faded);background:rgba(0,0,0,0.04);padding:0.1rem 0.4rem;border-radius:3px}}
+.area-badge{{display:inline-block;padding:0.1rem 0.4rem;border-radius:3px;background:var(--kincha-light);color:var(--kincha);font-size:0.68rem;font-weight:500;letter-spacing:0.03em}}
+.type-tag{{font-size:0.68rem;color:var(--sumi-faded);background:rgba(0,0,0,0.04);padding:0.08rem 0.35rem;border-radius:3px}}
 
-.filter-section{{margin-bottom:1rem}}
-.filter-label{{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--sumi-faded);margin-bottom:0.4rem}}
-.filter-row{{display:flex;gap:0.35rem;flex-wrap:wrap}}
-.filter-btn{{padding:0.3rem 0.7rem;border:1px solid var(--stone);border-radius:20px;background:transparent;font-family:var(--font-body);font-size:0.75rem;color:var(--sumi-light);cursor:pointer;transition:all 0.2s;white-space:nowrap}}
-.filter-btn:hover{{border-color:var(--sumi-light);color:var(--sumi)}}
-.filter-btn.active{{background:var(--sumi);color:white;border-color:var(--sumi)}}
-
-.directory-grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-top:1.5rem}}
-.place-card{{background:white;border-radius:8px;padding:1rem 1.2rem;text-decoration:none;color:inherit;transition:all 0.2s;display:block;border:1px solid rgba(214,211,209,0.4)}}
-.place-card:hover{{box-shadow:var(--shadow-md);transform:translateY(-1px);border-color:var(--stone)}}
-.place-card-name{{font-family:var(--font-display);font-size:1rem;font-weight:500;margin-bottom:0.35rem;line-height:1.3}}
-.place-card-meta{{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;font-size:0.78rem;color:var(--sumi-faded)}}
+/* Area filter pills (in toolbar area) */
+.area-nav{{max-width:1200px;margin:0 auto;padding:0.8rem 2rem 0}}
+.area-pills{{display:flex;gap:0.3rem;flex-wrap:wrap}}
+.area-pill{{padding:0.25rem 0.6rem;border:1px solid var(--stone);border-radius:20px;background:transparent;font-family:var(--font-body);font-size:0.72rem;color:var(--sumi-light);cursor:pointer;transition:all 0.2s;white-space:nowrap}}
+.area-pill:hover{{border-color:var(--sumi-light);color:var(--sumi)}}
+.area-pill.active{{background:var(--sumi);color:white;border-color:var(--sumi)}}
 
 .no-results{{text-align:center;padding:4rem 2rem;color:var(--sumi-faded)}}
 .no-results p{{font-size:1.1rem}}
@@ -119,73 +144,69 @@ body{{font-family:var(--font-body);background:var(--washi);color:var(--sumi);lin
 
 @media(max-width:640px){{
 .hero-stats{{gap:1.5rem}}
+.hero-stat-num{{font-size:2rem}}
 .toolbar-inner{{gap:0.8rem}}
 .toolbar-logo{{font-size:1rem}}
 .section{{padding:2rem 1rem}}
-.top-picks-grid,.directory-grid{{grid-template-columns:1fr}}
+.cat-grid{{grid-template-columns:1fr}}
+.top-chip-name{{max-width:150px}}
 }}
 </style>
 </head>
 <body>
 
-<section class="hero" id="hero">
-<div class="hero-content">
-<div class="hero-kanji">東 京 案 内</div>
-<h1 class="hero-title">Lucille &amp; Sun's<br><em>Tokyo</em> List</h1>
-<p class="hero-sub">A curated guide to our favorite places in Tokyo</p>
-<div class="hero-stats">
-<div class="hero-stat"><div class="hero-stat-num" id="stat-places">105</div><div class="hero-stat-label">Places</div></div>
-<div class="hero-stat"><div class="hero-stat-num" id="stat-areas">20</div><div class="hero-stat-label">Areas</div></div>
-<div class="hero-stat"><div class="hero-stat-num" id="stat-cats">20</div><div class="hero-stat-label">Categories</div></div>
-</div>
-</div>
-<div class="scroll-hint">
-<span>Explore</span>
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-</div>
+<!-- Hero (v1 style) -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-kanji">東京 · TOKYO</p>
+    <h1 class="hero-title">Lucille &amp; Sun's<br><em>Tokyo</em> List</h1>
+    <p class="hero-subtitle">A personal collection of places we love in Tokyo — shops, cafés, restaurants, museums, and hidden gems curated over years of exploring.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num" id="stat-places">105</div><div class="hero-stat-label">Places</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" id="stat-cats">0</div><div class="hero-stat-label">Categories</div></div>
+      <div class="hero-stat"><div class="hero-stat-num" id="stat-lists">2</div><div class="hero-stat-label">Lists</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
 </section>
 
+<!-- Toolbar -->
 <nav class="toolbar" id="toolbar">
-<div class="toolbar-inner">
-<div class="toolbar-logo">L&amp;S <em>Tokyo</em></div>
-<div class="search-box">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-<input type="text" id="search-input" placeholder="Search places, areas, categories...">
-</div>
-<span class="result-count" id="result-count">105 places</span>
-</div>
+  <div class="toolbar-inner">
+    <div class="toolbar-logo">Lucille &amp; Sun's <em>Tokyo</em></div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search-input" placeholder="Search places, areas, categories...">
+    </div>
+    <span class="result-count" id="result-count">105 places</span>
+  </div>
 </nav>
 
-<section class="section" id="top-picks">
-<div class="section-header">
-<h2 class="section-title"><em>Top</em> Picks</h2>
-<p class="section-sub">Highest rated places by Google reviews</p>
+<!-- Area filter -->
+<div class="area-nav">
+  <div class="area-pills" id="area-pills"></div>
 </div>
-<div class="top-picks-grid" id="top-grid"></div>
+
+<!-- Top Picks — compact strip -->
+<section class="section" id="top-picks" style="padding-bottom:1.5rem">
+  <div class="section-header">
+    <h2 class="section-title"><em>Top</em> Picks</h2>
+    <p class="section-sub">Highest rated by Google reviews</p>
+  </div>
+  <div class="top-strip" id="top-strip"></div>
 </section>
 
-<section class="section" id="directory">
-<div class="section-header">
-<h2 class="section-title">All <em>Places</em></h2>
-<p class="section-sub" id="places-subtitle">105 places across Tokyo</p>
-</div>
-<div class="filter-section">
-<div class="filter-label">Area</div>
-<div class="filter-row" id="area-filters"></div>
-</div>
-<div class="filter-section">
-<div class="filter-label">Category</div>
-<div class="filter-row" id="cat-filters"></div>
-</div>
-<div class="directory-grid" id="dir-grid"></div>
-</section>
+<!-- Main directory — grouped by category -->
+<div id="directory"></div>
 
 <footer class="footer">
-<p>Made with care by Lucille &amp; Sun &middot; Data from <a href="https://maps.google.com" target="_blank">Google Maps</a></p>
+  <p>Made with care by Lucille &amp; Sun &middot; Data from <a href="https://maps.google.com" target="_blank">Google Maps</a></p>
 </footer>
 
 <button class="back-top" id="back-top" onclick="window.scrollTo({{top:0}})">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
 <script>
@@ -193,106 +214,108 @@ const PLACES = {js_places};
 const TOP_NAMES = new Set({js_top});
 
 function gmapsUrl(p) {{
-  return 'https://www.google.com/maps/search/' + encodeURIComponent(p.name + ' ' + p.area + ' Tokyo');
+  const area = p.area ? p.area + ' ' : '';
+  return 'https://www.google.com/maps/search/' + encodeURIComponent(p.name + ' ' + area + 'Tokyo');
 }}
-
 function fmt(n) {{ return n.toLocaleString(); }}
 
 function cardMeta(p) {{
   let h = '<span class="star">\\u2605 ' + p.rating + '</span>';
   h += '<span class="reviews">(' + fmt(p.reviews) + ')</span>';
   if (p.price) h += '<span class="price-tag">' + p.price + '</span>';
-  h += '<span class="area-badge">' + p.area + '</span>';
-  h += '<span class="cat-tag">' + p.cat + '</span>';
+  if (p.area) h += '<span class="area-badge">' + p.area + '</span>';
+  if (p.gmaps_type) h += '<span class="type-tag">' + p.gmaps_type + '</span>';
   return h;
 }}
 
-// Top Picks
+let activeArea = 'all';
+let searchQuery = '';
+
+function getVisiblePlaces() {{
+  return PLACES.filter(p => {{
+    const q = searchQuery.toLowerCase();
+    const matchQ = !q || p.name.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q) || p.area.toLowerCase().includes(q) || (p.gmaps_type && p.gmaps_type.toLowerCase().includes(q));
+    const matchArea = activeArea === 'all' || p.area === activeArea;
+    return matchQ && matchArea;
+  }});
+}}
+
 function renderTopPicks() {{
-  const grid = document.getElementById('top-grid');
+  const strip = document.getElementById('top-strip');
   const tops = PLACES.filter(p => TOP_NAMES.has(p.name))
     .sort((a,b) => (b.rating * Math.log(b.reviews+1)) - (a.rating * Math.log(a.reviews+1)));
-  grid.innerHTML = tops.map((p, i) => `
-    <a class="top-card" href="${{gmapsUrl(p)}}" target="_blank" rel="noopener">
-      <span class="top-rank">#${{i+1}}</span>
-      <div class="top-card-name">${{p.name}}</div>
-      <div class="top-card-meta">${{cardMeta(p)}}</div>
-    </a>`).join('');
+  strip.innerHTML = tops.map((p, i) => 
+    '<a class="top-chip" href="' + gmapsUrl(p) + '" target="_blank" rel="noopener">' +
+    '<span class="top-chip-rank">' + (i+1) + '</span>' +
+    '<span class="top-chip-name">' + p.name + '</span>' +
+    '<span class="top-chip-rating">\\u2605 ' + p.rating + '</span>' +
+    '</a>'
+  ).join('');
 }}
 
-// Filters
-let activeArea = 'all';
-let activeCat = 'all';
-
-function getAreas() {{
-  const m = {{}};
-  PLACES.forEach(p => m[p.area] = (m[p.area]||0)+1);
-  return Object.entries(m).sort((a,b) => b[1]-a[1]);
+function renderAreaPills() {{
+  const areas = {{}};
+  PLACES.forEach(p => {{ if (p.area) areas[p.area] = (areas[p.area]||0)+1; }});
+  const sorted = Object.entries(areas).sort((a,b) => b[1]-a[1]);
+  const el = document.getElementById('area-pills');
+  el.innerHTML = '<button class="area-pill active" data-val="all">All areas</button>' +
+    sorted.map(([a,c]) => '<button class="area-pill" data-val="' + a + '">' + a + ' (' + c + ')</button>').join('');
 }}
 
-function getCats() {{
-  const m = {{}};
-  PLACES.forEach(p => m[p.cat] = (m[p.cat]||0)+1);
-  return Object.entries(m).sort((a,b) => b[1]-a[1]);
-}}
-
-function renderFilters() {{
-  const af = document.getElementById('area-filters');
-  const cf = document.getElementById('cat-filters');
-  const areas = getAreas();
-  const cats = getCats();
-  af.innerHTML = '<button class="filter-btn active" data-val="all">All</button>' +
-    areas.map(([a,c]) => `<button class="filter-btn" data-val="${{a}}">${{a}} (${{c}})</button>`).join('');
-  cf.innerHTML = '<button class="filter-btn active" data-val="all">All</button>' +
-    cats.map(([c,n]) => `<button class="filter-btn" data-val="${{c}}">${{c}} (${{n}})</button>`).join('');
-}}
-
-function filterAndRender() {{
-  const q = document.getElementById('search-input').value.toLowerCase();
-  const filtered = PLACES.filter(p => {{
-    const matchQ = !q || p.name.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q) || p.area.toLowerCase().includes(q);
-    const matchArea = activeArea === 'all' || p.area === activeArea;
-    const matchCat = activeCat === 'all' || p.cat === activeCat;
-    return matchQ && matchArea && matchCat;
-  }});
+function renderDirectory() {{
+  const visible = getVisiblePlaces();
+  const dir = document.getElementById('directory');
   
-  const grid = document.getElementById('dir-grid');
-  if (!filtered.length) {{
-    grid.innerHTML = '<div class="no-results"><p>No places found</p></div>';
-  }} else {{
-    grid.innerHTML = filtered.map(p => `
-      <a class="place-card" href="${{gmapsUrl(p)}}" target="_blank" rel="noopener">
-        <div class="place-card-name">${{p.name}}</div>
-        <div class="place-card-meta">${{cardMeta(p)}}</div>
-      </a>`).join('');
+  document.getElementById('result-count').textContent = visible.length + ' places';
+  
+  if (!visible.length) {{
+    dir.innerHTML = '<div class="no-results"><p>No places found</p></div>';
+    return;
   }}
   
-  document.getElementById('result-count').textContent = filtered.length + ' places';
-  document.getElementById('places-subtitle').textContent = filtered.length + ' places across Tokyo';
+  // Group by category
+  const groups = {{}};
+  const catOrder = [];
+  visible.forEach(p => {{
+    if (!groups[p.cat]) {{ groups[p.cat] = []; catOrder.push(p.cat); }}
+    groups[p.cat].push(p);
+  }});
+  
+  // Sort each group by rating desc
+  for (const cat in groups) {{
+    groups[cat].sort((a,b) => b.rating - a.rating || b.reviews - a.reviews);
+  }}
+  
+  dir.innerHTML = catOrder.map(cat => {{
+    const items = groups[cat];
+    return '<section class="section cat-section">' +
+      '<div class="cat-header"><h3 class="cat-name">' + cat + '</h3><span class="cat-count">' + items.length + ' places</span></div>' +
+      '<div class="cat-grid">' +
+      items.map(p => 
+        '<a class="place-card" href="' + gmapsUrl(p) + '" target="_blank" rel="noopener">' +
+        '<div class="place-card-name">' + p.name + '</div>' +
+        '<div class="place-card-meta">' + cardMeta(p) + '</div></a>'
+      ).join('') +
+      '</div></section>';
+  }}).join('');
 }}
 
 // Events
-document.getElementById('search-input').addEventListener('input', filterAndRender);
+document.getElementById('search-input').addEventListener('input', e => {{
+  searchQuery = e.target.value;
+  renderDirectory();
+}});
 
-document.getElementById('area-filters').addEventListener('click', e => {{
-  if (e.target.classList.contains('filter-btn')) {{
-    document.querySelectorAll('#area-filters .filter-btn').forEach(b => b.classList.remove('active'));
+document.getElementById('area-pills').addEventListener('click', e => {{
+  if (e.target.classList.contains('area-pill')) {{
+    document.querySelectorAll('.area-pill').forEach(b => b.classList.remove('active'));
     e.target.classList.add('active');
     activeArea = e.target.dataset.val;
-    filterAndRender();
+    renderDirectory();
   }}
 }});
 
-document.getElementById('cat-filters').addEventListener('click', e => {{
-  if (e.target.classList.contains('filter-btn')) {{
-    document.querySelectorAll('#cat-filters .filter-btn').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-    activeCat = e.target.dataset.val;
-    filterAndRender();
-  }}
-}});
-
-// Toolbar scroll
+// Toolbar scroll effect
 const toolbar = document.getElementById('toolbar');
 const observer = new IntersectionObserver(([e]) => {{
   toolbar.classList.toggle('scrolled', !e.isIntersecting);
@@ -306,16 +329,14 @@ window.addEventListener('scroll', () => {{
 }});
 
 // Stats
-const areas = new Set(PLACES.map(p => p.area));
 const cats = new Set(PLACES.map(p => p.cat));
 document.getElementById('stat-places').textContent = PLACES.length;
-document.getElementById('stat-areas').textContent = areas.size;
 document.getElementById('stat-cats').textContent = cats.size;
 
 // Init
 renderTopPicks();
-renderFilters();
-filterAndRender();
+renderAreaPills();
+renderDirectory();
 </script>
 </body>
 </html>'''
@@ -323,5 +344,4 @@ filterAndRender();
 with open("index.html", "w") as f:
     f.write(html)
 
-print(f"Done! {len(html)} bytes written")
-print(f"Places: {len(places)}, Top picks: {len(top_names)}, Areas: {len(areas)}, Categories: {len(cats)}")
+print(f"Done! {len(html)} bytes, {len(places)} places, {len(cats_sorted)} categories")
