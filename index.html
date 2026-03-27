@@ -35,6 +35,8 @@ body{font-family:var(--font-body);background:var(--washi);color:var(--sumi);line
 .hero-subtitle{font-size:clamp(0.85rem,1.2vw,1rem);color:var(--sumi-faded);max-width:460px;margin:0 auto 2.5rem;font-weight:300;letter-spacing:0.02em;opacity:0;animation:fadeUp 1s ease-out 0.6s forwards}
 .hero-stats{display:flex;gap:3rem;justify-content:center;opacity:0;animation:fadeUp 1s ease-out 0.8s forwards}
 .hero-stat{text-align:center}
+.hero-stat-link{text-decoration:none;color:inherit;cursor:pointer;transition:opacity 0.2s}
+.hero-stat-link:hover{opacity:0.7}
 .hero-stat-num{font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--sumi)}
 .hero-stat-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--stone-dark);margin-top:0.2rem}
 .scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);text-align:center;opacity:0;animation:fadeUp 1s ease-out 1.2s forwards}
@@ -163,9 +165,9 @@ body{font-family:var(--font-body);background:var(--washi);color:var(--sumi);line
     <h1 class="hero-title">Lucille &amp; Sun's<br><em>Tokyo</em> List</h1>
     <p class="hero-subtitle">A personal collection of places we love in Tokyo — shops, cafés, restaurants, museums, and hidden gems curated over years of exploring.</p>
     <div class="hero-stats">
-      <div class="hero-stat"><div class="hero-stat-num" id="stat-places">105</div><div class="hero-stat-label">Places</div></div>
-      <div class="hero-stat"><div class="hero-stat-num" id="stat-cats">0</div><div class="hero-stat-label">Categories</div></div>
-      <div class="hero-stat"><div class="hero-stat-num" id="stat-lists">20</div><div class="hero-stat-label">Top Picks</div></div>
+      <a class="hero-stat hero-stat-link" data-tab="places" href="#"><div class="hero-stat-num" id="stat-places">105</div><div class="hero-stat-label">Places</div></a>
+      <a class="hero-stat hero-stat-link" data-tab="categories" href="#"><div class="hero-stat-num" id="stat-cats">0</div><div class="hero-stat-label">Categories</div></a>
+      <a class="hero-stat hero-stat-link" data-tab="top-picks" href="#"><div class="hero-stat-num" id="stat-lists">20</div><div class="hero-stat-label">Top Picks</div></a>
     </div>
   </div>
   <div class="scroll-hint">
@@ -377,6 +379,20 @@ document.getElementById('tab-nav').addEventListener('click', e => {
   if (e.target.classList.contains('tab-btn')) {
     switchTab(e.target.dataset.tab);
   }
+});
+
+// Hero stat click -> switch to corresponding tab and scroll down
+document.querySelectorAll('.hero-stat-link').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const tab = link.dataset.tab;
+    switchTab(tab);
+    requestAnimationFrame(() => {
+      const toolbarEl = document.querySelector('.toolbar');
+      const toolbarTop = toolbarEl.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: toolbarTop, behavior: 'smooth' });
+    });
+  });
 });
 
 // Category chip click -> switch to Places tab with that category filter active
